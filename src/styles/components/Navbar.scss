@@ -1,0 +1,14 @@
+.btnOut{
+    background-color: tomato;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 5px 20px;
+    text-decoration: none;
+    border-radius: 25px;
+}
+.btnOut:hover{
+    color: white;
+    text-decoration: none;
+    background-color: darken($color: tomato, $amount: 5);
+}
