@@ -12,8 +12,8 @@ export const TableItem = ({reservas}) => {
         <>  
             <tr>
                 <td>{reservas.id}</td>
-                <td>{reservas.id_boleta}</td>
-                <td>{reservas.id_comprador}</td>
+                <td>{reservas.boleta}</td>
+                <td>{reservas.comprador}</td>
                 <td>{reservas.cantidad}</td>
                 
             </tr>

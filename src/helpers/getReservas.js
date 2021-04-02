@@ -1,21 +1,17 @@
 export const  getReservas=async(url)=>{
         
     const resp=await fetch(url);
-    const datos=await resp.json();
+    const {reservas}=await resp.json();
 
-    const reservas=datos.map(reserva => {
+    const reservasList=reservas.map(reserva => {
         return{
             id: reserva.id,
-            id_boleta: reserva.id_boleta,
-            id_comprador: reserva.id_comprador,
+            comprador:reserva.comprador.name,
+            boleta:reserva.boleta.description,
             cantidad:reserva.cantidad
         }
     })
 
-
-
-
-
-return reservas;
+return reservasList;
 }
 
