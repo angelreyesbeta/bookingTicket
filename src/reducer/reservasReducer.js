@@ -1,27 +1,24 @@
 
-const initialState={
+const initialStateReservas={
     loading:true,
     error:'',
-    dataBoletas:{},
-    colors:['primary','success','danger','warning','dark','info']
+    dataReservas:{},
 }
 
-
-
-const boletaReducer=(state={},action)=>{
+const reservaReducer=(state,action)=>{
 
     switch (action.type) {
-        case 'listarBoletas':
+        case 'listarReservas':
             return{
                 loading:false,
                 error:'',
-                dataBoletas:action.payload
+                dataReservas:action.payload
             }
         case 'Fetch error':
             return{
                 loading:false,
                 error:'Error en la api',
-                dataBoletas:{}
+                dataReservas:{}
             }
         default:
             return state;
@@ -29,5 +26,5 @@ const boletaReducer=(state={},action)=>{
 
 }
 
-export {initialState};
-export default boletaReducer;
+export {initialStateReservas};
+export default reservaReducer;

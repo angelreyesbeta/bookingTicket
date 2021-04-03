@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import {getCompradores} from '../../helpers/getCompradores'
 import { TableItem } from './TableItem'
 import {Modal,ModalFooter,ModalBody,ModalHeader} from 'reactstrap'
 import { useForm } from '../../hook/useForm';
 import axios from "axios";
 import { config } from '../../helpers/config';
+import { StoreContex } from '../../store/Store';
 
 
 export const CompradoresList = ({parametro,seleccionarComprador}) => {
-    const [dataCompradores, setDataCompradores] = useState([])
+    const {compradores,dispatchCompradores} = useContext(StoreContex)
+    const {dataCompradores,loading}=compradores;
+    //const [dataCompradores, setDataCompradores] = useState([])
     const [modalInsertar, setModalInsertar] = useState(false)
     const [msgError, setMsgError]=useState(null);
     const [msgsuccessful, setMsgSuccessful]=useState(null);
@@ -70,17 +73,21 @@ export const CompradoresList = ({parametro,seleccionarComprador}) => {
 
 
 
-    const ListCompradores=()=>{
+    const ListCompradores=useCallback(()=>{
         getCompradores(config.urlCompradores)
-             .then((compradores)=>{
-                setDataCompradores(compradores)
+             .then(compradores=>{
+                 dispatchCompradores({
+                     type:'listarCompradores',
+                     payload:compradores
+                 })
+                
             })
-    }
+    },[dispatchCompradores])
     
     useEffect(() => {
         ListCompradores();
        
-    },[])
+    },[ListCompradores])
 
     const changeStatusModal=()=>{
         setModalInsertar(!modalInsertar);
@@ -94,11 +101,11 @@ export const CompradoresList = ({parametro,seleccionarComprador}) => {
 
         <>
         <div className="container mt-5">
+            {
+                 loading?<h3>Cargando data</h3>:
+                 <>
+                 <button className="btn btn-success mb-3" onClick={changeStatusModal}><strong>Agregar Comprador</strong></button>
             
-               
-            
-            <button className="btn btn-success mb-3" onClick={changeStatusModal}><strong>Agregar Comprador</strong></button>
-           
             <table className="table">
                 <thead className="thead-dark">
                     <tr>
@@ -115,7 +122,7 @@ export const CompradoresList = ({parametro,seleccionarComprador}) => {
                 </thead>
                     <tbody>
                         {
-                           
+                        
                             dataCompradores.map(comprador=>{
                                 
                                 return(
@@ -128,13 +135,13 @@ export const CompradoresList = ({parametro,seleccionarComprador}) => {
                                     </TableItem>
                                 )
                             })
-                           
+                        
                         }
                     </tbody>
             </table>
-          
+                 </>
+            }
         </div>
-
         <Modal isOpen={modalInsertar}>
                 <ModalHeader style={{display:'block'}}>
                     
@@ -197,6 +204,8 @@ export const CompradoresList = ({parametro,seleccionarComprador}) => {
                         <button className="btn btn-danger" onClick={changeStatusModal}>Cancelar</button>
                 </ModalFooter>
             </Modal>
+        
+
         </>
     )
     

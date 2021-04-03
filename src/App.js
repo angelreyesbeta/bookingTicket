@@ -1,14 +1,15 @@
 import { AppRouter } from "./router/AppRouter";
-import BoletasProvider from "./store/BoletasProvider";
+import Store from "./store/Store";
+
 
 
 
 function App() {
   return (
     <>
-      <BoletasProvider>
+      <Store>
         <AppRouter/>
-      </BoletasProvider>
+      </Store>
     
     </>
   );

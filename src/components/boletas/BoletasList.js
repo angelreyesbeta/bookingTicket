@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import {getBoletas} from '../../helpers/getBoletas'
 import { TableItem } from './TableItem'
 import {Modal,ModalFooter,ModalBody,ModalHeader} from 'reactstrap'
@@ -6,28 +6,29 @@ import {Modal,ModalFooter,ModalBody,ModalHeader} from 'reactstrap'
 import { useForm } from '../../hook/useForm';
 import axios from "axios";
 import { config } from '../../helpers/config';
+import { StoreContex } from '../../store/Store';
 
 
 export const BoletasList = () => {
-    const [dataBoletas, setDataBoletas] = useState([])
+    const {boletas,dispatch} = useContext(StoreContex)
+    const {loading,dataBoletas}=boletas;
     const [modalInsertar, setModalInsertar] = useState(false)
     const [msgError, setMsgError]=useState(null);
     const [msgsuccessful, setMsgSuccessful]=useState(null);
 
     //recibo la data de boletas
 
-    const ListBoletas=()=>{
+    const ListBoletas=useCallback(()=>{
         getBoletas(config.urlBoletas)
-             .then((boletas)=>{
-                setDataBoletas(boletas)
-                
+             .then(boletas=>{
+                dispatch({type:'listarBoletas', payload:boletas})             
             })
-    }
+    },[dispatch])
     
     useEffect(() => {
         ListBoletas();
        
-    },[])
+    },[ListBoletas])
 
     const changeStatusModal=()=>{
         setModalInsertar(!modalInsertar);
@@ -92,10 +93,13 @@ export const BoletasList = () => {
     return(
 
         <>
+        
         <div className="container mt-5">
-            <button className="btn btn-success mb-3" onClick={changeStatusModal}><strong>Agregar Boleta</strong></button>
-           
-            <table className="table">
+           {
+                loading?<h3>Cargando data</h3>:
+                <>
+                <button className="btn btn-success mb-3" onClick={changeStatusModal}><strong>Agregar Boleta</strong></button>
+                <table className="table">
                 <thead className="thead-dark">
                     <tr>
                         <th>ID</th>
@@ -104,7 +108,8 @@ export const BoletasList = () => {
                     </tr>
                 </thead>
                     <tbody>
-                        {
+                            {
+                                
                             dataBoletas.map(boletas=>{
                                 return(
                                     <TableItem
@@ -119,6 +124,8 @@ export const BoletasList = () => {
                         }
                     </tbody>
             </table>
+            </>
+           }
           
         </div>
 

@@ -1,27 +1,34 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect    } from 'react'
 import { config } from '../../helpers/config'
 import {getReservas} from '../../helpers/getReservas'
+import { StoreContex } from '../../store/Store'
 import { TableItem } from './TableItem'
 
 export const ListaReservas = () => {
-    const [dataReservas, setDataReservas] = useState([])
 
-    const ListReservas=()=>{
+    const {reservas,dispatchReservas} = useContext(StoreContex)
+    const {loading,dataReservas}=reservas;
+
+    const ListReservas=useCallback(()=>{
         getReservas(config.urlReservas)
-             .then((reservas=>{
-
-                 setDataReservas(reservas)
-                 
-             })
-                
+             .then(reservas=>{
+                dispatchReservas({
+                    type:'listarReservas', 
+                    payload:reservas
+                })
+             }   
             ) 
-    }
+    },[dispatchReservas])
     
     useEffect(() => {
         ListReservas();
-    },[])
+    },[ListReservas])
+    
     return (
         <div className="container mt-5">
+            {
+
+                loading?<h3>Cargando data</h3>:
             <table className="table">
                 <thead className="thead-dark">
                     <tr>
@@ -45,6 +52,7 @@ export const ListaReservas = () => {
                         }
                     </tbody>
             </table>
+            }
           
         </div>
     )
