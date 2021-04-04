@@ -31,16 +31,26 @@ export const CompradoresList = ({parametro,seleccionarComprador}) => {
     const{name,identification,phone}=formValues;
 
     const postCompradores=async()=>{
-        return await axios.post(config.urlCompradores,formValues)
+
+        let json=JSON.stringify(formValues);
+        let params='json='+json;        
+        return await axios.post(config.urlCompradores,params)
         .then(response=>{
-            setMsgSuccessful('Ingreso Exitoso')
-            setMsgError(null)
-            ListCompradores();
-            reset();
+            if(response.data.status==="success"){
+                setMsgSuccessful('Ingreso Exitoso')
+                setMsgError(null)
+                ListCompradores();
+                reset();
+            }else if(response.data.status==="error"){
+                setMsgError(response.data.message)
+                setMsgSuccessful(null);
+            }
         }).catch(error=>{
             setMsgError(error.message)
             setMsgSuccessful(null)
         })
+
+        
     }
 
 

@@ -49,12 +49,21 @@ export const BoletasList = () => {
     const{description,cantidad}=formValues;
 
     const postBoletas=async()=>{
-        return await axios.post(config.urlBoletas,formValues)
+        
+        let json=JSON.stringify(formValues);
+        let params='json='+json;        
+        return await axios.post(config.urlBoletas,params)
         .then(response=>{
-            setMsgSuccessful('Ingreso Exitoso')
-            setMsgError(null)
-            ListBoletas();
-            reset();
+            if(response.data.status==="success"){
+                setMsgSuccessful('Ingreso Exitoso')
+                setMsgError(null)
+                ListBoletas();
+                reset();
+            }else if(response.data.status==="error"){
+                setMsgError(response.data.message)
+                setMsgSuccessful(null);
+            }
+            
         }).catch(error=>{
             setMsgError(error.message)
             setMsgSuccessful(null)

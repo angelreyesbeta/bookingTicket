@@ -32,15 +32,24 @@ export const Reservar = ({history}) => {
     }
 
     const postReserva=async(reserva)=>{
-        if(reserva.cantidad>dataCantidad){
-            setMsgError("Cantidad superada")
+        let json=JSON.stringify(reserva);
+        let params='json='+json; 
+        if(reserva.cantidad>dataCantidad || reserva.cantidad<=0){
+            setMsgError("Cantidad superada o no valida")
             setMsgSuccessful(null)
         }else
-        return await axios.post(config.urlReservas,reserva)
+        
+        return await axios.post(config.urlReservas,params)
         .then(response=>{
-            setMsgSuccessful('Ingreso Exitoso')
-            setDataCantidad(dataCantidad-reserva.cantidad)
-            setMsgError(null)
+            if(response.data.status==="success"){
+                setMsgSuccessful('Ingreso Exitoso')
+                setDataCantidad(dataCantidad-reserva.cantidad)
+                setMsgError(null)
+            }else if(response.data.status==="error"){
+                setMsgError(response.data.message)
+                setMsgSuccessful(null);
+            }
+            
         }).catch(error=>{
             setMsgError(error.message)
             setMsgSuccessful(null)
