@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState    } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { config } from '../../helpers/config'
 import {getReservas} from '../../helpers/getReservas'
 import { StoreContex } from '../../store/Store'
@@ -48,7 +48,8 @@ export const ListaReservas = () => {
 
     const {reservas,dispatchReservas} = useContext(StoreContex)
     const {loading,dataReservas}=reservas;
-    
+    const [state, setstate] = useState({})
+
     const ListReservas=useCallback(()=>{
         getReservas(config.urlReservas)
              .then(reservas=>{
@@ -56,7 +57,7 @@ export const ListaReservas = () => {
                     type:'listarReservas', 
                     payload:reservas
                 })
-               
+               setstate(reservas);
              }   
             ) 
     },[dispatchReservas])
@@ -67,18 +68,26 @@ export const ListaReservas = () => {
   
     const filtrarElemento=(e)=>{
         e.preventDefault();
-       
-        const search=dataReservas.filter(item=>{
-            if(item.boleta.includes(busqueda) ||
-               item.comprador.normalize('NFD').replace(/[\u0300-\u036f]/g,"").includes(busqueda)){
-                return item;
-            }
-        })
+       if(busqueda===""){
+       // ListaReservas();
+       dispatchReservas({
+        type:'listarReservas', 
+        payload:state
+    })
+       }else{
 
-        dispatchReservas({
-            type:'listarReservas', 
-            payload:search
-        })
+           const search=dataReservas.filter(item=>{
+               if(item.boleta.includes(busqueda) ||
+                  item.comprador.normalize('NFD').replace(/[\u0300-\u036f]/g,"").includes(busqueda)){
+                   return item;
+               }
+           })
+   
+           dispatchReservas({
+               type:'listarReservas', 
+               payload:search
+           })
+       }
     }
    
     
