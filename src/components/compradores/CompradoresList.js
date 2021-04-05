@@ -115,40 +115,41 @@ export const CompradoresList = ({parametro,seleccionarComprador}) => {
                  loading?<h3>Cargando data</h3>:
                  <>
                  <button className="btn btn-success mb-3" onClick={changeStatusModal}><strong>Agregar Comprador</strong></button>
-            
-            <table className="table">
-                <thead className="thead-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Identificación</th>
-                        <th>Telefono</th>
-                        {parametro&&(
+            <div className="table-responsive-sm">
+                <table className="table">
+                    <thead className="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Identificación</th>
+                            <th>Telefono</th>
+                            {parametro&&(
 
-                            <th>Acciones</th>
-                        )
-                        }
-                    </tr>
-                </thead>
-                    <tbody>
-                        {
-                        
-                            dataCompradores.map(comprador=>{
-                                
-                                return(
-                                    <TableItem
-                                    key={comprador.id}
-                                    compradores={comprador}
-                                    parametro={parametro}
-                                    seleccionarComprador={seleccionarComprador}
-                                    >
-                                    </TableItem>
-                                )
-                            })
-                        
-                        }
-                    </tbody>
-            </table>
+                                <th>Acciones</th>
+                            )
+                            }
+                        </tr>
+                    </thead>
+                        <tbody>
+                            {
+                            
+                                dataCompradores.map(comprador=>{
+                                    
+                                    return(
+                                        <TableItem
+                                        key={comprador.id}
+                                        compradores={comprador}
+                                        parametro={parametro}
+                                        seleccionarComprador={seleccionarComprador}
+                                        >
+                                        </TableItem>
+                                    )
+                                })
+                            
+                            }
+                        </tbody>
+                </table>
+            </div>
                  </>
             }
         </div>
